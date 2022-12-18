@@ -1,3 +1,7 @@
+https://github.com/Braineanear/EcommerceAPI
+https://gist.github.com/robert52/1f82b5d201aa95e13cd1a3344f03eda5
+https://github.com/anurag-majumdar/ecommerce-rest-api/blob/master/api/controllers/orders.js
+
 https://blog.jscrambler.com/build-database-relationships-with-node-js-and-mongodb
 
 node_express_mongodb@1.0.0 /Users/eli/git_repos/full-stack/crud-nodejs-express

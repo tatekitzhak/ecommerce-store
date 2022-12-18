@@ -21,8 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(hpp());
-// open mongoose connection
-mongooseConnection('index.js');
 
 // General page
 app.get('/', apiLimiter_15_minutes, (req, res, next) => {
