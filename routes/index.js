@@ -2,6 +2,10 @@ const express = require("express");
 const { Item, Owner, Shop } = require('../models/tiny_store/index')
 const { apiRateNetworkTrafficLimiter } = require('../middlewares/rateLimiter');
 
+/**
+ * https://github.com/Automattic/mongoose/issues/4802
+ */
+
 module.exports = function (app) {
     app.use(express.json());
 
