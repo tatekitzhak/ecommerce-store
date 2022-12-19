@@ -1,6 +1,8 @@
 https://github.com/Braineanear/EcommerceAPI
 https://gist.github.com/robert52/1f82b5d201aa95e13cd1a3344f03eda5
 https://github.com/anurag-majumdar/ecommerce-rest-api/blob/master/api/controllers/orders.js
+https://github.com/codergogoi/Grocery_Online_Shopping_App/blob/master/online_shopping_monolithic/src/database/repository/customer-repository.js
+https://github.com/mohamedsamara/mern-ecommerce
 
 https://blog.jscrambler.com/build-database-relationships-with-node-js-and-mongodb
 
