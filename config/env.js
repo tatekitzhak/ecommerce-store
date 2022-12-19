@@ -4,7 +4,7 @@ module.exports = {
   env: process.env.NODE_ENV,
   port: process.env.PORT || 3900,
   mongo: {
-    uri: "mongodb://127.0.0.1:27017/ecommerce-store",
+    uri: "mongodb://127.0.0.1:27017/tiny-store",
   },
   logs: process.env.NODE_ENV === 'production' ? 'combined' : 'dev',
   emailConfig: {
