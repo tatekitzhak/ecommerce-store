@@ -17,7 +17,7 @@ module.exports = function (app) {
             })
             .then(async function (shop) {
                 console.log("shop:", shop)
-                return await Item.create({ shop: shop._id })
+                return await Item.create({ shop: shop._id, product: 'abc' })
             })
             .then(async function (shop) {
                 return await Item.findOne({ _id: shop._id })
@@ -42,7 +42,7 @@ module.exports = function (app) {
 
         const shop = await Shop.find().populate('owner');
 
-        console.log(' shop', shop);
+        console.log('shop', shop);
         res.status(200).json(shop);
 
     });
@@ -59,7 +59,7 @@ module.exports = function (app) {
             options: { lean: true }
         });
 
-        console.log(' shop', item);
+        console.log('shop', item);
         res.status(200).json(item);
 
     });

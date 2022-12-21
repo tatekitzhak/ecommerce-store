@@ -48,9 +48,6 @@ app.use('/*', (req, res, next) => {
 /* Error handler middleware */
 app.use(globalErrHandler);
 
-
-
-
 app.listen(port, () => {
   // open mongoose connection
   mongooseConnection('index.js');
@@ -61,7 +58,7 @@ app.listen(port, () => {
     }
 
     if (typeof stdout === 'string' && (stdout.trim())) {
-      console.log(`The branch name is : \x1b[36m ${stdout.trim()}  \x1b[0m`);
+      console.log(`Git branch name:\x1b[36m ${stdout.trim()}  \x1b[0m`);
     }
 });
   console.log(`server started on: \x1b[36m http://localhost:${port} \x1b[0m`)

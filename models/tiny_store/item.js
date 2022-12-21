@@ -4,24 +4,28 @@ mongoose.set('debug', true);
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const OwnerSchema = new Schema({
-    name: { type: String }
-});
-
-const ShopSchema = new Schema({
-    owner: { type: ObjectId, ref: 'Owner' }
-});
-
 const ItemSchema = new Schema({
-    shop: { type: ObjectId, ref: 'Shop' }
+    product:{
+        type: String,
+        required: '{PATH} is required!',
+        unique: [true, "{PATH} must be unique"] // `product` must be unique
+    },
+    shop: { type: ObjectId, ref: 'Shop' },
+    buyer:[{
+        type: ObjectId, ref: 'User'
+    }]
 });
 
-const Owner = mongoose.model('Owner', OwnerSchema);
-const Shop = mongoose.model('Shop', ShopSchema);
+ItemSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+        console.log('post(save) error:\n',error)
+      next(new Error('email must be unique'));
+    } else {
+        console.log('post(save) error:\n',error)
+      next(error);
+    }
+  });
+
 const Item = mongoose.model('Item', ItemSchema);
 
-module.exports = {
-    Owner,
-    Shop,
-    Item
-};
+module.exports = { Item };
