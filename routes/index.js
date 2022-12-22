@@ -1,5 +1,6 @@
 const express = require("express");
-const { Item, Owner, Shop } = require('../models/tiny_store/index')
+// const { Item, Owner, Shop } = require('../models/tiny_store/index');
+const shopRouter = require('./tiny_store/route');
 const { apiRateNetworkTrafficLimiter } = require('../middlewares/rateLimiter');
 
 /**
@@ -8,8 +9,9 @@ const { apiRateNetworkTrafficLimiter } = require('../middlewares/rateLimiter');
 
 module.exports = function (app) {
     app.use(express.json());
-
-    app.get('/create-item-owner-shop', apiRateNetworkTrafficLimiter, async function (req, res, next) {
+    app.use('/shop', apiRateNetworkTrafficLimiter, shopRouter);
+/* 
+    app.get('/create-shop', apiRateNetworkTrafficLimiter, async function (req, res, next) {
 
         const saved_data = await Owner.create({ name: 'Ran' })
             .then(async function (owner) {
@@ -36,8 +38,10 @@ module.exports = function (app) {
 
         res.status(200).json(saved_data);
 
-    });
-
+    })
+    .post();
+ */
+/* 
     app.get('/populate-shop', apiRateNetworkTrafficLimiter, async function (req, res, next) {
 
         const shop = await Shop.find().populate('owner');
@@ -46,7 +50,8 @@ module.exports = function (app) {
         res.status(200).json(shop);
 
     });
-
+ */
+/* 
     app.get('/populate-item', apiRateNetworkTrafficLimiter, async function (req, res, next) {
 
         const item = await Item.find().populate({
@@ -63,4 +68,5 @@ module.exports = function (app) {
         res.status(200).json(item);
 
     });
+     */
 };

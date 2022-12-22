@@ -29,7 +29,6 @@ app.get('/', apiLimiter_15_minutes, (req, res, next) => {
 
 });
 
-
 require('./routes/index')(app);
 
 // handle undefined Routes
@@ -37,13 +36,6 @@ app.use('/*', (req, res, next) => {
   const err = new AppError(404, 'fail', 'undefined route\n');
   next(err, req, res, next);
 });
-
-/* 
- app.all('/books/:i', (req, res, next) => {
-   res.json({ books_page: 'books pag!' })
-   next()
- });
- */
 
 /* Error handler middleware */
 app.use(globalErrHandler);

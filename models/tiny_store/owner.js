@@ -4,10 +4,26 @@ mongoose.set('debug', true);
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const OwnerSchema = new Schema({
-    name: { type: String }
+// Define the user schema
+const User = new Schema({
+    username: {
+        type: String,
+        required: '{PATH} is required!',
+        unique: true
+    },
+    password: {
+        type: String,
+        required: '{PATH} is required!',
+        unique: true
+    }
 });
 
-const Owner = mongoose.model('Owner', OwnerSchema);
+const OwnerSchema = new Schema({
+    name: { type: String },
+    /* user: {
+        type: User
+    } */
+});
 
-module.exports = { Owner };
+
+module.exports =  mongoose.model('Owner', OwnerSchema)
