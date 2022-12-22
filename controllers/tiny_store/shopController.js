@@ -1,10 +1,11 @@
 const ObjectId = require('mongoose').Types.ObjectId;
-const { Item, Owner , Shop } = require('../../models/index')
+const { Item, Owner, Shop } = require('../../models/index')
 
 module.exports = {
     async getAllShops(req, res, next) {
         try {
-            const item = await Item.find().populate({
+            const owner = await Owner.find()
+            /* .populate({
                 path: 'shop',
                 select: 'owner',
                 populate: {
@@ -12,7 +13,7 @@ module.exports = {
                     select: 'name'
                 },
                 options: { lean: true }
-            });
+            }); */
             // const popluatedClaim = await Claim.findById(insertedClaim._id).populate({ path: "billed_insurances",});
             /* const item1 = await Categorie.findOne({ name: 'Food and Beverage' })
                 .populate('subcategories').exec((err, doc) => {
@@ -23,7 +24,7 @@ module.exports = {
                     return doc;
                 }) */;
 
-            res.json({ item });
+            res.json({ owner });
         } catch (err) {
             next(err);
         }
@@ -33,6 +34,11 @@ module.exports = {
         try {
             const saved_data = await Owner.create({ name: 'Ran' })
                 .then(async function (owner) {
+                    console.log('owner1:', owner)
+                    return owner;
+                })
+                .then(async function (owner) {
+                    console.log('owner2:', owner)
                     return await Shop.create({ owner: owner._id })
                 })
                 .then(async function (shop) {

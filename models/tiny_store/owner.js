@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -8,22 +8,25 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const User = new Schema({
     username: {
         type: String,
-        required: '{PATH} is required!',
-        unique: true
+        /* required: '{PATH} is required!',
+        unique: true */
     },
     password: {
         type: String,
-        required: '{PATH} is required!',
-        unique: true
+        /* required: '{PATH} is required!',
+        unique: true */
     }
 });
 
 const OwnerSchema = new Schema({
     name: { type: String },
-    /* user: {
+    user: {
         type: User
-    } */
+    },
+    shop: [{
+        type: ObjectId, ref: 'Shop'
+    }],
 });
 
 
-module.exports =  mongoose.model('Owner', OwnerSchema)
+module.exports = mongoose.model('Owner', OwnerSchema)
