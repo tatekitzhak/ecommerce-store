@@ -5,7 +5,16 @@ module.exports = {
     async getAllShops(req, res, next) {
         try {
             const product = await Product.find();
-            const owner = await Owner.find();
+            const owner = await Owner.find()
+                .populate({
+                    path: 'shops',
+                    select: 'name',
+                    populate: {
+                        path: 'products',
+                        select: ['name','items']
+                    },
+                    options: { lean: true }
+                });
             const shop = await Shop.find()
                 .populate({
                     path: 'owner',
@@ -30,45 +39,53 @@ module.exports = {
     async createShop(req, res, next) {
         const store = req.body;
         try {
-            console.log('store:',store[0].shop[0])
             for (let i = 0; i < store.length; i++) {
+
                 await Owner.create({ name: store[i].name })
                     .then(async function (owner) {
 
-                        for (let s = 0; s < store[i].shop.length; s++) {
+                        for (let s = 0; s < store[i].shops.length; s++) {
 
-                            console.log('Shop:',store[i].shop[s].name)
-
-                            await Shop.create({ owner: owner._id, name: store[i].shop[s].name })
+                            await Shop.create({ owner: owner._id, name: store[i].shops[s].name })
                                 .then(async function (shop) {
 
-                                    for (let p = 0; p < store[i].shop[s].products.length; p++) {
-                                        console.log('Product:',store[i].shop[s].products[p]) 
-                                        await Product.create({ name: store[i].shop[s].products[p].name, shop: shop._id, })
-                                        .then(async function (product) {
-                                            let updatedProduct = await Product.findOneAndUpdate({ _id: product._id },
-                                                { "$push": { items: { $each: store[i].shop[s].products[p].items } } },
-                                                { new: true });
+                                    for (let p = 0; p < store[i].shops[s].products.length; p++) {
+                                        
+                                        let productName = store[i].shops[s].products[p].name;
 
-                                            await Shop.findByIdAndUpdate(shop._id, {
-                                                $push: { products: product._id }
-                                            }, { 'new': true });
-                                        });
-                                    }
-                            
+                                        await Product.create({ name: productName, shops: shop._id, })
+                                            .then(async function (product) {
+                                                let productItems = store[i].shops[s].products[p].items;
+                                                let updatedProduct = await Product.findOneAndUpdate({ _id: product._id },
+                                                    { "$push": { items: { $each: productItems} } },
+                                                    { new: true });
+
+                                                await Shop.findByIdAndUpdate(shop._id, {
+                                                    $push: { products: product._id }
+                                                }, { 'new': true });
+                                            });
+                                    };
 
                                     return await Owner.findByIdAndUpdate(owner._id, {
-                                        $push: { shop: shop._id }
+                                        $push: { shops: shop._id }
                                     }, { 'new': true });
 
                                 })
                                 .catch(err => console.log('Error on bundle: Shop.create: ' + err));
-                        }
+                        };
                     })
                     .catch(err => console.log('Error on bundle: Owner.create: ' + err));
-
             };
-            res.status(200).json({ store });
+
+            const product = await Product.find();
+            const owner = await Owner.find();
+            const shop = await Shop.find()
+                .populate({
+                    path: 'owner',
+                    select: 'name',
+                    options: { lean: true }
+                });
+            res.status(200).json({ owner, shop, product });
 
         } catch (error) {
             console.log('error:\n', error);

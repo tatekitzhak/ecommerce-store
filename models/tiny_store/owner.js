@@ -23,7 +23,7 @@ const OwnerSchema = new Schema({
     user: {
         type: User
     },
-    shop: [{
+    shops: [{
         type: ObjectId, ref: 'Shop'
     }],
 });

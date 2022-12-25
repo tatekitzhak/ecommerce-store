@@ -13,23 +13,23 @@ const ProductSchema = new Schema({
         required: '{PATH} is required!',
         unique: [true, "{PATH} must be unique"] // `product` must be unique
     }, */
-  shop: [{
+  shops: [{
     type: ObjectId, ref: 'Shop'
   }],
-  buyer: [{
+  buyers: [{
     type: ObjectId, ref: 'User'
   }],
-  items:[Schema.Types.Mixed]
+  items: [Schema.Types.Mixed]
 });
 // Pre save middleware Just before saving model
-ProductSchema.pre('save', async function(next){
+ProductSchema.pre('save', async function (next) {
   const user = this;
   // console.log('ProductSchema: Pre implement just before saving!');
 });
 
 ProductSchema.post('save', function (_) {
   // console.log('ProductSchema: Post implement just after saving!');
-    
+
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
