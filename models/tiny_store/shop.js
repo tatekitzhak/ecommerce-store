@@ -13,8 +13,8 @@ const ShopSchema = new Schema({
         unique: true */
     },
     owner: { type: ObjectId, ref: 'Owner' },
-    product: [{
-        type: ObjectId, ref: 'Item'
+    products: [{
+        type: ObjectId, ref: 'Product'
     }]
 });
 

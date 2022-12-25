@@ -41,5 +41,5 @@ const Item = mongoose.model('Item', ItemSchema);
 module.exports = {
     Owner: require('./owner'),
     Shop: require('./shop'),
-    Item: require('./item')
+    Product: require('./item')
 };

@@ -1,9 +1,10 @@
 const ObjectId = require('mongoose').Types.ObjectId;
-const { Item, Owner, Shop } = require('../../models/index')
+const { Product, Owner, Shop } = require('../../models/index')
 
 module.exports = {
     async getAllShops(req, res, next) {
         try {
+            const product = await Product.find();
             const owner = await Owner.find();
             const shop = await Shop.find()
                 .populate({
@@ -21,7 +22,7 @@ module.exports = {
                 options: { lean: true }
             }); */
 
-            res.json({ owner, shop });
+            res.json({ owner, shop, product });
         } catch (err) {
             next(err);
         }
@@ -34,9 +35,22 @@ module.exports = {
                     .then(async function (owner) {
                         for (let s = 1; s < 3; s++) {
                             await Shop.create({ owner: owner._id, name: `shop ${s}` })
-                                .then(function (shop) {
-                                    return Owner.findByIdAndUpdate(owner._id, {
-                                        $push: { shop: shop._id }},{ 'new': true });
+                                .then(async function (shop) {
+
+                                    await Product.create({ name: `product ${i}.${s}`, shop: shop._id, })
+                                        .then(async function (product) {
+                                            let updatedProduct = await Product.findOneAndUpdate({ _id: product._id },
+                                                { "$push": { items: { $each: [777, 8882] } } },
+                                                { new: true });
+
+                                            await Shop.findByIdAndUpdate(shop._id, {
+                                                $push: { products: updatedProduct._id }
+                                            }, { 'new': true });
+                                        });
+
+                                    return await Owner.findByIdAndUpdate(owner._id, {
+                                        $push: { shop: shop._id }
+                                    }, { 'new': true });
 
                                 })
                                 .catch(err => console.log('Error on bundle: Shop.create: ' + err));
