@@ -19,7 +19,7 @@ const ProductSchema = new Schema({
   buyer: [{
     type: ObjectId, ref: 'User'
   }],
-  items:[Number]
+  items:[Schema.Types.Mixed]
 });
 // Pre save middleware Just before saving model
 ProductSchema.pre('save', async function(next){

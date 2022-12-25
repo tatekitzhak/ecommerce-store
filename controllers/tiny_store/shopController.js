@@ -30,23 +30,32 @@ module.exports = {
     async createShop(req, res, next) {
         const store = req.body;
         try {
-            for (let i = 1; i < 4; i++) {
-                await Owner.create({ name: `ran - ${i}` })
+            console.log('store:',store[0].shop[0])
+            for (let i = 0; i < store.length; i++) {
+                await Owner.create({ name: store[i].name })
                     .then(async function (owner) {
-                        for (let s = 1; s < 3; s++) {
-                            await Shop.create({ owner: owner._id, name: `shop ${s}` })
+
+                        for (let s = 0; s < store[i].shop.length; s++) {
+
+                            console.log('Shop:',store[i].shop[s].name)
+
+                            await Shop.create({ owner: owner._id, name: store[i].shop[s].name })
                                 .then(async function (shop) {
 
-                                    await Product.create({ name: `product ${i}.${s}`, shop: shop._id, })
+                                    for (let p = 0; p < store[i].shop[s].products.length; p++) {
+                                        console.log('Product:',store[i].shop[s].products[p]) 
+                                        await Product.create({ name: store[i].shop[s].products[p].name, shop: shop._id, })
                                         .then(async function (product) {
                                             let updatedProduct = await Product.findOneAndUpdate({ _id: product._id },
-                                                { "$push": { items: { $each: [777, 8882] } } },
+                                                { "$push": { items: { $each: store[i].shop[s].products[p].items } } },
                                                 { new: true });
 
                                             await Shop.findByIdAndUpdate(shop._id, {
-                                                $push: { products: updatedProduct._id }
+                                                $push: { products: product._id }
                                             }, { 'new': true });
                                         });
+                                    }
+                            
 
                                     return await Owner.findByIdAndUpdate(owner._id, {
                                         $push: { shop: shop._id }
@@ -58,36 +67,7 @@ module.exports = {
                     })
                     .catch(err => console.log('Error on bundle: Owner.create: ' + err));
 
-            }
-            /* await Owner.create({ name: 'Ran' })
-                .then(async function (owner) {
-                    return await Shop.create({ owner: owner._id })
-                })
-                .then(function (shop) {
-                    return Item.create({ shop: shop._id, name: 'abcde' })
-                        .then(function (item) {
-                            console.log('item:', item.name)
-                            return Item.updateOne({ name: item.name },
-                                { $push: { items: { $each: [777, 8882] } } },
-                                { upsert: true });
-                        });
-                })
-                .then(async function (shop) {
-                    return await Item.findOne({ _id: shop._id })
-                        .populate({
-                            path: 'shop',
-                            select: 'owner',
-                            populate: {
-                                path: 'owner',
-                                select: 'name'
-                            },
-                            options: { lean: true }
-                        }).
-                        then(item => console.log("item.toObject():", item))
-                        .catch(error => console.log('error:', error));
-                })
-                .catch(err => console.log('Error on bundle: Owner.create: ' + err));
- */
+            };
             res.status(200).json({ store });
 
         } catch (error) {
