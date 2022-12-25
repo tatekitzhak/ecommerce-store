@@ -4,7 +4,13 @@ const { Item, Owner, Shop } = require('../../models/index')
 module.exports = {
     async getAllShops(req, res, next) {
         try {
-            const owner = await Owner.find()
+            const owner = await Owner.find();
+            const shop = await Shop.find()
+                .populate({
+                    path: 'owner',
+                    select: 'name',
+                    options: { lean: true }
+                });
             /* .populate({
                 path: 'shop',
                 select: 'owner',
@@ -14,36 +20,43 @@ module.exports = {
                 },
                 options: { lean: true }
             }); */
-            // const popluatedClaim = await Claim.findById(insertedClaim._id).populate({ path: "billed_insurances",});
-            /* const item1 = await Categorie.findOne({ name: 'Food and Beverage' })
-                .populate('subcategories').exec((err, doc) => {
-                    if (err) {
-                        return console.log('populate subcategories:', err);
-                    }
-                    console.log('subcategories doc:', doc);
-                    return doc;
-                }) */;
 
-            res.json({ owner });
+            res.json({ owner, shop });
         } catch (err) {
             next(err);
         }
     },
     async createShop(req, res, next) {
-
+        const store = req.body;
         try {
-            const saved_data = await Owner.create({ name: 'Ran' })
+            for (let i = 1; i < 4; i++) {
+                await Owner.create({ name: `ran - ${i}` })
+                    .then(async function (owner) {
+                        for (let s = 1; s < 3; s++) {
+                            await Shop.create({ owner: owner._id, name: `shop ${s}` })
+                                .then(function (shop) {
+                                    return Owner.findByIdAndUpdate(owner._id, {
+                                        $push: { shop: shop._id }},{ 'new': true });
+
+                                })
+                                .catch(err => console.log('Error on bundle: Shop.create: ' + err));
+                        }
+                    })
+                    .catch(err => console.log('Error on bundle: Owner.create: ' + err));
+
+            }
+            /* await Owner.create({ name: 'Ran' })
                 .then(async function (owner) {
-                    console.log('owner1:', owner)
-                    return owner;
-                })
-                .then(async function (owner) {
-                    console.log('owner2:', owner)
                     return await Shop.create({ owner: owner._id })
                 })
-                .then(async function (shop) {
-                    console.log("shop:", shop)
-                    return await Item.create({ shop: shop._id, product: 'abc' })
+                .then(function (shop) {
+                    return Item.create({ shop: shop._id, name: 'abcde' })
+                        .then(function (item) {
+                            console.log('item:', item.name)
+                            return Item.updateOne({ name: item.name },
+                                { $push: { items: { $each: [777, 8882] } } },
+                                { upsert: true });
+                        });
                 })
                 .then(async function (shop) {
                     return await Item.findOne({ _id: shop._id })
@@ -56,17 +69,20 @@ module.exports = {
                             },
                             options: { lean: true }
                         }).
-                        then(item => console.log("item.toObject():", item.toObject()))
+                        then(item => console.log("item.toObject():", item))
                         .catch(error => console.log('error:', error));
-                });
-
-            res.status(200).json({ createShop: saved_data });
+                })
+                .catch(err => console.log('Error on bundle: Owner.create: ' + err));
+ */
+            res.status(200).json({ store });
 
         } catch (error) {
             console.log('error:\n', error);
             next(error)
-        }
+        };
     },
+
+
     async addSubcategories(req, res, next) {
         try {
             const { bookId, TagId } = req.params;

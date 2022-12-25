@@ -7,11 +7,11 @@ var Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ShopSchema = new Schema({
-   /*  name: {
+    name: {
         type: String,
-        required: '{PATH} is required!',
-        unique: true
-    }, */
+        /* required: '{PATH} is required!',
+        unique: true */
+    },
     owner: { type: ObjectId, ref: 'Owner' },
     product: [{
         type: ObjectId, ref: 'Item'
@@ -21,12 +21,12 @@ const ShopSchema = new Schema({
 // Pre save middleware Just before saving model
 ShopSchema.pre('save', async function(next){
     const user = this;
-    console.log('Pre implement just before saving!');
+    // console.log('Pre implement just before saving!');
 });
 
 // Post save middleware Just after saving model
 ShopSchema.post('save', function (error, doc, next) {
-    console.log('Post implement just after saving!');
+    // console.log('Post implement just after saving!');
     if (error.code === 11000) {
         console.log('post(save) MongoServerError:\n', error)
         next(new Error(`\n${this.name} must be unique\n`));

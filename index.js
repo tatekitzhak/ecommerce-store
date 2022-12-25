@@ -1,10 +1,4 @@
 const express = require('express');
-var mongoose = require('mongoose')
-// mongoose.set('debug', true); // Set the debug option: all executed methods log output to console
-mongoose.set("debug", (collectionName, method, query, doc) => {
-  console.log(`###${collectionName}.${method}`, JSON.stringify(query), doc);
-  // OR: logger(`${collectionName}.${method}`, JSON.stringify(query), doc);
-});
 const { exec } = require('child_process');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
