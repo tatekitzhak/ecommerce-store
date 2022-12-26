@@ -6,20 +6,24 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const ProductSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    /* required: '{PATH} is required!',
+    unique: [true, "{PATH} must be unique"] // `product` must be unique */
   },
-  /*   product:{
-        type: String,
-        required: '{PATH} is required!',
-        unique: [true, "{PATH} must be unique"] // `product` must be unique
-    }, */
   shops: [{
     type: ObjectId, ref: 'Shop'
   }],
   buyers: [{
     type: ObjectId, ref: 'User'
   }],
-  items: [Schema.Types.Mixed]
+  items: [Schema.Types.Mixed],
+  categories: {
+    type: ObjectId, ref: 'Categorie',
+    // required: '{PATH} is required!'
+  },
+  subcategories: [{
+    type: ObjectId, ref: 'Subcategorie'
+  }]
 });
 // Pre save middleware Just before saving model
 ProductSchema.pre('save', async function (next) {

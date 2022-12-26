@@ -1,6 +1,6 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const { Product, Owner, Shop } = require('../../models/index')
-
+//  https://github.com/Automattic/mongoose/issues/4802
 module.exports = {
     async getAllShops(req, res, next) {
         try {
@@ -21,20 +21,19 @@ module.exports = {
                     select: 'name',
                     options: { lean: true }
                 });
-            /* .populate({
-                path: 'shop',
-                select: 'owner',
-                populate: {
-                    path: 'owner',
-                    select: 'name'
-                },
-                options: { lean: true }
-            }); */
 
             res.json({ owner, shop, product });
         } catch (err) {
             next(err);
         }
+        finally {
+            //finallyCode - Code block to be executed regardless of the try result
+            /**
+             * Do some clean up
+             * Do log
+             */
+            console.log('finally:')
+          }
     },
     async createShop(req, res, next) {
         const store = req.body;
@@ -90,7 +89,15 @@ module.exports = {
         } catch (error) {
             console.log('error:\n', error);
             next(error)
-        };
+        }
+        finally {
+            //finallyCode - Code block to be executed regardless of the try result
+            /**
+             * Do some clean up
+             * Do log
+             */
+            console.log('Finally will execute every time');
+          }
     },
 
 
